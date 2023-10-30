@@ -1,0 +1,22 @@
+from app import db
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+
+class User(db.Model):
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(250), nullable=False)
+    email = db.Column(db.String(60), index=True, unique= True, nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+    level = db.Column(db.BigInteger, nullable=False)
+    create_at = db.Column(db.DateTime, default=datetime.utcnow)
+    update_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.name)
+    
+    def setPassword(self, password_to_set):
+        self.password = generate_password_hash(password_to_set)
+
+    def checkPassword(self, password_to_check):
+        return check_password_hash(self.password, password_to_check)
+
